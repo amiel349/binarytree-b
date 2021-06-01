@@ -532,9 +532,8 @@ namespace ariel
 
 			 tree.printTree(tree.root,0,os);
 			 
-			 return os;};
-
-
+			 return os;
+			 };
 
  void printTree(Node *node, int space,std::ostream &os)const{// simple 2d  tree print based on geeksforgeeks 
    if (node== nullptr){
