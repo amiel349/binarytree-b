@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stack>
 #include <queue>
+#include <iostream>
 #pragma once
+
+const size_t TWO=2;
 
 namespace ariel
 {
@@ -16,22 +19,25 @@ namespace ariel
 		public:
 			Node *left;
 			Node *right;
-			Node *parent;
 			T value;
 			Node() = default;
-			Node(const T &val) : left(nullptr), right(nullptr), parent(nullptr), value(val){};
+			Node(const T &val) : left(nullptr), right(nullptr), value(val){};
 			bool operator==(const Node &other) const
 			{
 				return this->value == other->value && this->left == other->left &&
-					   this->right == other.right && this->parent == other.parent;
+					   this->right == other.right;
 			}
 
 			bool operator!=(const Node &other) const
 			{
 				return this->value != other->value || this->left != other->left ||
-					   this->right != other.right || this->parent != other.parent;
+					   this->right != other.right;
 			}
-		};
+          friend std::ostream &operator<<(std::ostream &os, const Node &node){
+			  os<<node.value;
+			  return os;};
+
+		};// End class Node
 
 	private:
 		Node *root;
@@ -197,8 +203,8 @@ namespace ariel
 			Node *ptr_to_node;
 
 		public:
-			in_order_iter(Node *ptr = nullptr)
-			{
+			in_order_iter(Node *ptr = nullptr) // inorder traversal using a queue and a stack, based on  
+			{                                  //https://www.techiedelight.com/inorder-tree-traversal-iterative-recursive/
 
 				if (ptr == nullptr)
 				{
@@ -269,6 +275,7 @@ namespace ariel
 			
 			 in_order_iter operator++(int)
 			{
+				if(*this==nullptr){return *this;}
 				in_order_iter tmp = *this;
                 ++*this;
                 return tmp;
@@ -283,7 +290,7 @@ namespace ariel
 			{
 				return ptr_to_node != node.ptr_to_node;
 			}
-		}; 
+		}; //End of class inorder iterator
 
 		class pre_order_iter
 		{
@@ -293,8 +300,8 @@ namespace ariel
 			std::queue<Node *> nodes_queue;
 
 		public:
-			pre_order_iter(Node *ptr = nullptr) //pre order traversal with queue and stack
-			{
+			pre_order_iter(Node *ptr = nullptr) //pre order traversal with queue and stack based on 
+			{                                   // https://www.techiedelight.com/preorder-tree-traversal-iterative-recursive/
 
 				if (ptr == nullptr)
 				{
@@ -366,8 +373,9 @@ namespace ariel
 			}
 
 			
-			pre_order_iter operator++(int)
-			{
+			 pre_order_iter operator++(int)
+			{    
+				if(*this==nullptr){return *this;}
 				 pre_order_iter tmp = *this;
                 ++*this;
                 return tmp;
@@ -382,7 +390,7 @@ namespace ariel
 			{
 				return ptr_to_node != node.ptr_to_node;
 			}
-		};
+		};// End of class preorder iterator
 
 		class post_order_iter
 		{
@@ -392,8 +400,8 @@ namespace ariel
 			std::stack<Node *> nodes_stack;
 
 		public:
-		  post_order_iter(Node *ptr = nullptr) //iterative post order traversal using 2 stacks
-			{
+		  post_order_iter(Node *ptr = nullptr) //iterative post order traversal using 2 stacks based on
+			{                                  // https://www.techiedelight.com/postorder-tree-traversal-iterative-recursive/
 				if (ptr == nullptr)
 				{
 					ptr_to_node = nullptr;
@@ -455,7 +463,9 @@ namespace ariel
 
 			
 			 post_order_iter operator++(int)
-			{  post_order_iter tmp = *this;
+			{  
+				if(*this==nullptr){return *this;}
+				post_order_iter tmp = *this;
                 ++*this;
                 return tmp;
 			}
@@ -480,7 +490,7 @@ namespace ariel
 		pre_order_iter end_preorder()
 		{
 			
-			return pre_order_iter{nullptr};
+			return pre_order_iter{};
 		}
 
 		in_order_iter begin_inorder()
@@ -492,7 +502,7 @@ namespace ariel
 		in_order_iter end_inorder()
 		{
 			
-			return in_order_iter{nullptr};
+			return in_order_iter{};
 		}
 
 		post_order_iter begin_postorder()
@@ -504,7 +514,7 @@ namespace ariel
 		post_order_iter end_postorder()
 		{
 		
-			return post_order_iter{nullptr};
+			return post_order_iter{};
 		}
 
 		in_order_iter begin()
@@ -516,10 +526,28 @@ namespace ariel
 		in_order_iter end()
 		{
 		
-			return in_order_iter{nullptr};
+			return in_order_iter{};
 		}
+         friend std::ostream &operator<<(std::ostream &os, const BinaryTree<T> &tree){
 
-		// friend std::ostream& operator<< (std::ostream& os, const BinaryTree& n){return os;};
-	};
+			 tree.printTree(tree.root,0,os);
+			 
+			 return os;};
+
+
+
+ void printTree(Node *node, int space,std::ostream &os)const{// simple 2d  tree print based on geeksforgeeks 
+   if (node== nullptr){
+      return;}
+   space += TWO;
+   printTree(node->right, space,os);
+   for (int i = TWO; i < space; i++){
+      os<<"\t";}
+   os<<node->value<<"\n";
+   printTree(node->left, space,os);
 }
 
+	};
+
+	
+};
